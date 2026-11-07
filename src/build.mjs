@@ -1,11 +1,11 @@
-// Builds the static site into ./site from the page modules in ./src/pages.
+// Builds the static site into the repository root from the page modules in ./src/pages.
 // Usage: node src/build.mjs
 import { writeFileSync, mkdirSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const srcDir = dirname(fileURLToPath(import.meta.url));
-const out = join(srcDir, "..", "site");
+const out = join(srcDir, "..");
 const pagesDir = join(srcDir, "pages");
 
 let count = 0;

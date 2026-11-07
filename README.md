@@ -1,8 +1,8 @@
 # Take Root Life Coaching: website concept
 
 A multi-page static site for Adrienne Phelps / Take Root Life Coaching, built by Code Bunny.
-It needs no framework and no server. `site/` is the finished website and can be uploaded to any static host
-(Netlify, Vercel, Cloudflare Pages, GitHub Pages, S3, or a plain web server).
+It needs no framework and no server. The repository root is the finished website, published with GitHub Pages at
+**https://takerootlifecoaching.codebunny.net/** (it can also be uploaded to any static host).
 
 All copy, pricing, testimonials, credentials and journal posts come from takerootlifecoaching.com.
 
@@ -23,7 +23,7 @@ All copy, pricing, testimonials, credentials and journal posts come from takeroo
 
 ## Editing and rebuilding
 
-The HTML in `site/` is generated. Edit the sources, then rebuild:
+The page HTML at the repository root is generated. Edit the sources, then rebuild:
 
 ```bash
 node src/build.mjs
@@ -33,14 +33,14 @@ node src/build.mjs
 - `src/pages/*.mjs`: one module per page
 - `src/posts.json`: journal content
 - `src/images.json`: image sizes used for responsive `srcset`
-- `site/assets/css/main.css`: the design system (colour tokens at the top)
-- `site/assets/js/main.js`: interactions (GSAP + ScrollTrigger in `assets/vendor/`)
-- `site/assets/js/footing.js`: the Footing Check
+- `assets/css/main.css`: the design system (colour tokens at the top)
+- `assets/js/main.js`: interactions (GSAP + ScrollTrigger in `assets/vendor/`)
+- `assets/js/footing.js`: the Footing Check
 
 To preview locally:
 
 ```bash
-python3 -m http.server 8080 --directory site
+python3 -m http.server 8080
 ```
 
 ## Settings to check before launch
