@@ -20,10 +20,15 @@
 <link rel="preload" href="assets/fonts/inter-tight.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/fraunces-italic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/main.css">
-<script>(function(d){d.classList.add('js');setTimeout(function(){if(!d.classList.contains('is-ready'))d.classList.remove('js')},3000)})(document.documentElement);</script>
+<script>(function(d){d.classList.add('js');try{if(sessionStorage.getItem('tr-pt')&&!matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('pt-in')}catch(e){}setTimeout(function(){if(!d.classList.contains('is-ready')){d.classList.remove('js');d.classList.remove('pt-in')}},3000)})(document.documentElement);</script>
 <script type="application/ld+json">[{"@context":"https://schema.org","@type":"ProfessionalService","@id":"https://www.takerootlifecoaching.com/#business","name":"Take Root Life Coaching","url":"https://www.takerootlifecoaching.com","email":"adrienne@takerootlifecoaching.com","image":"https://www.takerootlifecoaching.com/assets/img/adrienne-hero-1200.webp","logo":"https://www.takerootlifecoaching.com/assets/img/icon-512.png","description":"One-on-one, whole-person life coaching with Adrienne Phelps. Virtual sessions focused on self-discovery, career alignment and well-being.","priceRange":"$0–$390","areaServed":"United States","address":{"@type":"PostalAddress","addressLocality":"Raleigh","addressRegion":"NC","addressCountry":"US"},"founder":{"@type":"Person","name":"Adrienne Phelps","jobTitle":"Life Coach"},"sameAs":["https://www.instagram.com/takeroot.lifecoaching/","https://www.facebook.com/profile.php?id=61576414054838"]},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is life coaching, and how is it different from therapy?","acceptedAnswer":{"@type":"Answer","text":"Life coaching is future-focused. While therapy often works through past experiences and mental health, coaching starts from where you are now and helps you move forward. Coaching tends to feel lighter and lifts you up, while therapy can feel like it’s working downward into what’s underneath. Many of my clients have tried therapy and felt like something was still missing. Coaching can work alongside it, or stand on its own."}},{"@type":"Question","name":"What can I expect from a coaching session?","acceptedAnswer":{"@type":"Answer","text":"Each session is a focused, judgment-free space to think out loud. We’ll start with what’s on your mind that week, dig into what’s really going on beneath the surface, and leave with clarity on your next step. This is a process of self-discovery — you’ll walk away understanding yourself in ways you didn’t before, but coaching only works if you do the work between sessions too. I’ll help you build the self-efficacy to take action on your own, not depend on me to have the answers."}},{"@type":"Question","name":"Who do you typically work with?","acceptedAnswer":{"@type":"Answer","text":"I work with high-functioning adults who look like they have it all together on the outside, but feel restless, disconnected, or stuck on the inside. Many have tried therapy and are ready for something more forward-moving. If you’re successful by most measures but still asking “is this it?” — that’s who I’m here for."}},{"@type":"Question","name":"How do I know if coaching is right for me?","acceptedAnswer":{"@type":"Answer","text":"Coaching is a fit if you’re functioning well on paper but feel restless, stuck, or like something’s missing. You don’t need a crisis to justify coaching; you just need a willingness to get honest about what you want and take steps toward it. If you’re ready to do the work between sessions, not just talk about change, coaching can help you get there. You can reach me anytime via the contact page or email."}},{"@type":"Question","name":"Are the sessions confidential?","acceptedAnswer":{"@type":"Answer","text":"Yes. What you share in our sessions stays between us. I won’t share your information with anyone without your permission, except where I’m legally required to or where there’s a risk of serious harm to you or someone else."}},{"@type":"Question","name":"How long is each session, and how often do we meet?","acceptedAnswer":{"@type":"Answer","text":"Sessions typically run 45 to 50 minutes. Most clients meet weekly or every other week, especially at the start, so momentum builds and we can track progress between sessions. We’ll find a cadence that fits your schedule and goals."}},{"@type":"Question","name":"Do you offer virtual or in-person sessions?","acceptedAnswer":{"@type":"Answer","text":"All sessions are held virtually, making it easy to fit coaching into your life no matter where you are."}},{"@type":"Question","name":"What’s the cost, and do you offer packages?","acceptedAnswer":{"@type":"Answer","text":"I offer a free First Step call to talk through what you’re looking for. A single 50-minute session is $150, and the 3-session package is $390 ($130 per session) for clients ready to do real, ongoing work. For past package clients, I also offer Recurring Client sessions as a check-in when you need a tune-up."}},{"@type":"Question","name":"How long should I commit to coaching?","acceptedAnswer":{"@type":"Answer","text":"Most clients start with a package of several sessions, since real change tends to unfold over time rather than in a single conversation. We’ll check in along the way to see what’s working and adjust as needed."}},{"@type":"Question","name":"What’s your cancellation policy?","acceptedAnswer":{"@type":"Answer","text":"Fees are paid in advance when you book each session. If you need to cancel or reschedule, I ask for at least 24 hours’ notice. Cancellations made within 24 hours of your appointment are subject to a $50 fee, and missed sessions aren’t reimbursed or rescheduled unless we’ve agreed on that in advance."}}]}]</script>
 </head>
 <body id="top" class="">
+<div class="pt" aria-hidden="true">
+  <div class="pt-layer pt-layer--clay"></div>
+  <div class="pt-layer pt-layer--forest"><div class="pt-center"><img src="assets/img/logo-mark-sm.png" width="196" height="240" alt=""><span class="pt-kicker">take root</span><span class="pt-label" id="pt-label">Take Root</span></div></div>
+</div>
+<script>try{var ptl=sessionStorage.getItem('tr-pt');if(ptl)document.getElementById('pt-label').textContent=ptl}catch(e){}</script>
 <a class="skip" href="#main">Skip to content</a>
 <header class="nav" id="nav">
   <a class="brand" href="index.html" aria-label="Take Root Life Coaching — home">
@@ -133,7 +138,7 @@
       </div>
     </div>
     <div class="footer-grid">
-      <div class="footer-brand">
+      <div class="footer-brand" data-reveal>
         <a class="brand" href="index.html" aria-label="Take Root Life Coaching — home">
           <img src="assets/img/logo-mark-sm.png" width="196" height="240" alt="">
           <span class="brand-text"><span class="brand-name">take root</span><span class="brand-sub">Life Coaching</span></span>
@@ -145,18 +150,18 @@
           <a href="mailto:adrienne@takerootlifecoaching.com" aria-label="Email Adrienne"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/></svg></a>
         </div>
       </div>
-      <div class="footer-col"><h4>Explore</h4><ul>
+      <div class="footer-col" data-reveal style="--d:.08s"><h4>Explore</h4><ul>
         <li><a href="index.html">Home</a></li><li><a href="about.html">About Adrienne</a></li>
         <li><a href="journal.html">Journal</a></li><li><a href="faq.html">FAQ</a></li></ul></div>
-      <div class="footer-col"><h4>Work together</h4><ul>
+      <div class="footer-col" data-reveal style="--d:.16s"><h4>Work together</h4><ul>
         <li><a href="coaching.html">Coaching &amp; pricing</a></li><li><a href="work-with-me.html">Book a session</a></li>
         <li><a href="footing-check.html">The Footing Check</a></li><li><a href="contact.html">Contact</a></li></ul></div>
-      <div class="footer-col"><h4>Say hello</h4><ul>
+      <div class="footer-col" data-reveal style="--d:.24s"><h4>Say hello</h4><ul>
         <li><a href="mailto:adrienne@takerootlifecoaching.com">adrienne@takerootlifecoaching.com</a></li><li><a href="https://www.instagram.com/takeroot.lifecoaching/" target="_blank" rel="noopener">Instagram</a></li>
         <li><a href="https://www.facebook.com/profile.php?id=61576414054838" target="_blank" rel="noopener">Facebook</a></li><li><span class="muted" style="color:var(--on-dark-muted)">Raleigh, NC · Virtual</span></li></ul></div>
     </div>
   </div>
-  <div class="wordmark" aria-hidden="true">take <em>root</em></div>
+  <div class="wordmark" aria-hidden="true"><span class="wm-word"><span class="wm-ch">t</span><span class="wm-ch">a</span><span class="wm-ch">k</span><span class="wm-ch">e</span></span><span class="wm-word wm-word--i"><span class="wm-ch">r</span><span class="wm-ch">o</span><span class="wm-ch">o</span><span class="wm-ch">t</span></span></div>
   <div class="wrap footer-bar">
     <span>© 2026 Take Root Life Coaching, LLC</span>
     <nav aria-label="Legal"><a href="https://www.takerootlifecoaching.com/privacy-policy">Privacy</a><a href="https://www.takerootlifecoaching.com/terms-of-service">Terms</a><a href="#top" data-top>Back to top ↑</a></nav>

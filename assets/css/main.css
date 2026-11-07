@@ -837,12 +837,39 @@ a.card--img:hover > img, .card--img:hover > img { transform: scale(1.05); }
 .footer-col li + li { margin-top: 10px; }
 .footer-col a { font-size: 15.5px; transition: color .3s; }
 .footer-col a:hover { color: var(--ember); }
-.wordmark { font-family: var(--serif); font-weight: 400; font-size: clamp(5rem, 21.5vw, 21rem); line-height: .8; letter-spacing: -.06em; text-align: center; white-space: nowrap; padding-bottom: .1em;
-  background: linear-gradient(180deg, var(--ember) 0%, var(--clay) 55%, rgba(229, 96, 42, .35) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; user-select: none; }
-.wordmark em { font-style: italic; margin-left: .1em; }
+.wordmark { font-family: var(--serif); font-weight: 400; font-size: clamp(5rem, 21.5vw, 21rem); line-height: .8; letter-spacing: -.06em; text-align: center; white-space: nowrap; overflow: hidden; padding-top: .04em; user-select: none; }
+.wm-word { display: inline-block; }
+.wm-word--i { font-style: italic; margin-left: .14em; }
+.wm-ch {
+  display: inline-block; line-height: 1.02; padding: 0 .07em .06em; margin: 0 -.07em; transform-origin: 0% 100%;
+  background: linear-gradient(180deg, var(--ember) 8%, var(--clay) 58%, rgba(229, 96, 42, .38) 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  transition: translate .7s var(--ease);
+}
+.wm-ch:hover { translate: 0 -.07em; }
 .footer-bar { display: flex; justify-content: space-between; align-items: center; gap: 12px 24px; flex-wrap: wrap; padding-block: 22px 26px; border-top: 1px solid var(--line-light); font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--on-dark-muted); }
 .footer-bar a:hover { color: var(--ember); }
 .footer-bar nav { display: flex; gap: 20px; flex-wrap: wrap; }
+
+/* Page transition curtain */
+.pt { position: fixed; inset: 0; z-index: 200; pointer-events: none; visibility: hidden; }
+.pt-out .pt, .pt-in .pt { visibility: visible; pointer-events: auto; }
+.pt-layer { position: absolute; inset: 0; transform: translateY(100%); border-radius: 50% 50% 0 0 / 12vh 12vh 0 0; will-change: transform; }
+.pt-layer--clay { background: var(--clay); }
+.pt-layer--forest { background: var(--forest); display: grid; place-items: center; }
+.pt-layer--forest::before { content: ""; position: absolute; inset: 0; background: radial-gradient(60% 50% at 50% 0%, rgba(229, 96, 42, .22), transparent 70%); border-radius: inherit; }
+.pt-center { position: relative; display: flex; flex-direction: column; align-items: center; gap: 14px; color: var(--on-dark); opacity: 0; transform: translateY(24px); }
+.pt-center img { width: 46px; height: auto; }
+.pt-kicker { font-family: var(--mono); font-size: 11px; letter-spacing: .26em; text-transform: uppercase; color: var(--on-dark-muted); }
+.pt-label { font-family: var(--serif); font-style: italic; font-weight: 400; font-size: clamp(2.6rem, 7vw, 5.5rem); line-height: 1; letter-spacing: -.035em; color: var(--ember); font-variation-settings: "opsz" 144; text-align: center; padding: 0 20px; }
+.pt-out .pt-layer { transform: none; border-radius: 0; transition: transform .62s cubic-bezier(.76, 0, .24, 1), border-radius .62s cubic-bezier(.76, 0, .24, 1); }
+.pt-out .pt-layer--forest { transition-delay: .07s; }
+.pt-out .pt-center { opacity: 1; transform: none; transition: opacity .45s ease .32s, transform .7s var(--ease) .3s; }
+.pt-in .pt-layer { transform: none; border-radius: 0; }
+.pt-in .pt-center { opacity: 1; transform: none; }
+.pt-in.pt-reveal .pt-layer { transform: translateY(-100%); border-radius: 0 0 50% 50% / 0 0 12vh 12vh; transition: transform .85s cubic-bezier(.76, 0, .24, 1), border-radius .85s cubic-bezier(.76, 0, .24, 1); }
+.pt-in.pt-reveal .pt-layer--clay { transition-delay: .09s; }
+.pt-in.pt-reveal .pt-center { opacity: 0; transform: translateY(-36px); transition: opacity .35s ease, transform .6s var(--ease); }
 
 /* Mobile sticky booking bar */
 .sticky-book {
@@ -994,6 +1021,7 @@ a.card--img:hover > img, .card--img:hover > img { transform: scale(1.05); }
   .js .statement[data-words] .w, .js .signs-list li p { opacity: 1; color: inherit; }
   .js .step, .js .root-label { opacity: 1; }
   .marquee-track { animation: none; }
+  .pt { display: none; }
 }
 
 @media print {

@@ -58,4 +58,5 @@ python3 -m http.server 8080
 - Works at phone, tablet and desktop widths, with a sticky booking bar on phones and a full-screen menu
 - Self-hosted fonts (Inter Tight, Fraunces, JetBrains Mono) and responsive WebP images
 - Structured data for the business, person, service, FAQ and articles; Open Graph image; sitemap; robots; web manifest
+- Branded page-change curtain (with prefetching) and footer lettering that rises in on scroll
 - Respects `prefers-reduced-motion`; content stays visible if JavaScript fails; keyboard-accessible menu, tabs and accordion

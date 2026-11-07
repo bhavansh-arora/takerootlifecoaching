@@ -132,6 +132,8 @@ function header(base, current) {
 </div>`;
 }
 
+const wmChars = (word) => [...word].map((c) => `<span class="wm-ch">${c}</span>`).join("");
+
 function footer(base, cta = {}) {
   const title = cta.title || `Ready to take root and <em>thrive?</em>`;
   const text = cta.text || `Let’s chat to see if coaching is a good fit for you. Thirty minutes, free, and no pressure — just an honest conversation.`;
@@ -152,7 +154,7 @@ function footer(base, cta = {}) {
       </div>
     </div>
     <div class="footer-grid">
-      <div class="footer-brand">
+      <div class="footer-brand" data-reveal>
         <a class="brand" href="${base}index.html" aria-label="Take Root Life Coaching — home">
           <img src="${base}assets/img/logo-mark-sm.png" width="196" height="240" alt="">
           <span class="brand-text"><span class="brand-name">take root</span><span class="brand-sub">Life Coaching</span></span>
@@ -164,18 +166,18 @@ function footer(base, cta = {}) {
           <a href="mailto:${SITE.email}" aria-label="Email Adrienne">${icons.mail}</a>
         </div>
       </div>
-      <div class="footer-col"><h4>Explore</h4><ul>
+      <div class="footer-col" data-reveal style="--d:.08s"><h4>Explore</h4><ul>
         <li><a href="${base}index.html">Home</a></li><li><a href="${base}about.html">About Adrienne</a></li>
         <li><a href="${base}journal.html">Journal</a></li><li><a href="${base}faq.html">FAQ</a></li></ul></div>
-      <div class="footer-col"><h4>Work together</h4><ul>
+      <div class="footer-col" data-reveal style="--d:.16s"><h4>Work together</h4><ul>
         <li><a href="${base}coaching.html">Coaching &amp; pricing</a></li><li><a href="${base}work-with-me.html">Book a session</a></li>
         <li><a href="${base}footing-check.html">The Footing Check</a></li><li><a href="${base}contact.html">Contact</a></li></ul></div>
-      <div class="footer-col"><h4>Say hello</h4><ul>
+      <div class="footer-col" data-reveal style="--d:.24s"><h4>Say hello</h4><ul>
         <li><a href="mailto:${SITE.email}">${SITE.email}</a></li><li><a href="${SITE.instagram}" target="_blank" rel="noopener">Instagram</a></li>
         <li><a href="${SITE.facebook}" target="_blank" rel="noopener">Facebook</a></li><li><span class="muted" style="color:var(--on-dark-muted)">Raleigh, NC · Virtual</span></li></ul></div>
     </div>
   </div>
-  <div class="wordmark" aria-hidden="true">take <em>root</em></div>
+  <div class="wordmark" aria-hidden="true"><span class="wm-word">${wmChars("take")}</span><span class="wm-word wm-word--i">${wmChars("root")}</span></div>
   <div class="wrap footer-bar">
     <span>© ${year} Take Root Life Coaching, LLC</span>
     <nav aria-label="Legal"><a href="${SITE.privacy}">Privacy</a><a href="${SITE.terms}">Terms</a><a href="#top" data-top>Back to top ↑</a></nav>
@@ -233,10 +235,15 @@ ${noindex ? '<meta name="robots" content="noindex, nofollow">' : `<link rel="can
 <link rel="preload" href="${base}assets/fonts/inter-tight.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="${base}assets/fonts/fraunces-italic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="${base}assets/css/main.css">
-<script>(function(d){d.classList.add('js');setTimeout(function(){if(!d.classList.contains('is-ready'))d.classList.remove('js')},3000)})(document.documentElement);</script>
+<script>(function(d){d.classList.add('js');try{if(sessionStorage.getItem('tr-pt')&&!matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('pt-in')}catch(e){}setTimeout(function(){if(!d.classList.contains('is-ready')){d.classList.remove('js');d.classList.remove('pt-in')}},3000)})(document.documentElement);</script>
 <script type="application/ld+json">${JSON.stringify(ld.length === 1 ? ld[0] : ld)}</script>
 </head>
 <body id="top" class="${bodyClass}">
+<div class="pt" aria-hidden="true">
+  <div class="pt-layer pt-layer--clay"></div>
+  <div class="pt-layer pt-layer--forest"><div class="pt-center"><img src="${base}assets/img/logo-mark-sm.png" width="196" height="240" alt=""><span class="pt-kicker">take root</span><span class="pt-label" id="pt-label">Take Root</span></div></div>
+</div>
+<script>try{var ptl=sessionStorage.getItem('tr-pt');if(ptl)document.getElementById('pt-label').textContent=ptl}catch(e){}</script>
 ${header(base, current)}
 <main id="main">
 ${body}

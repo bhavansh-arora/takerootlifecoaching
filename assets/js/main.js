@@ -8,9 +8,62 @@
   const hasGsap = () => !reduce && window.gsap && window.ScrollTrigger;
   root.classList.add("is-ready");
 
+  /* ---------- Page transitions (curtain) ---------- */
+  const PT_KEY = "tr-pt";
+  const arriving = root.classList.contains("pt-in");
+  if (arriving) {
+    try { sessionStorage.removeItem(PT_KEY); } catch (_) {}
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      root.classList.add("pt-reveal");
+      setTimeout(() => root.classList.remove("pt-in", "pt-reveal"), 1000);
+    }));
+  }
+  const pageLabel = (url) => {
+    if (url.pathname.includes("/journal/")) return "Journal";
+    const file = url.pathname.split("/").pop() || "index.html";
+    return ({ "index.html": "Home", "about.html": "About", "coaching.html": "Coaching", "work-with-me.html": "Book a session", "footing-check.html": "Footing Check", "journal.html": "Journal", "faq.html": "FAQ", "contact.html": "Contact", "ideas.html": "A few ideas", "404.html": "Take Root" })[file] || "Take Root";
+  };
+  const internalPage = (a) => {
+    if (!a || (a.target && a.target !== "_self") || a.hasAttribute("download")) return null;
+    const url = new URL(a.href, location.href);
+    if (url.origin !== location.origin || !/^(https?|file):$/.test(url.protocol)) return null;
+    if (url.pathname === location.pathname && url.search === location.search) return null;
+    if (!/(\.html|\/)$/.test(url.pathname)) return null;
+    return url;
+  };
+  let leaving = false;
+  if (!reduce) {
+    d.addEventListener("click", (e) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const url = internalPage(e.target.closest("a[href]"));
+      if (!url) return;
+      e.preventDefault();
+      if (leaving) return;
+      leaving = true;
+      const label = pageLabel(url);
+      try { sessionStorage.setItem(PT_KEY, label); } catch (_) {}
+      const lbl = $("#pt-label"); if (lbl) lbl.textContent = label;
+      root.classList.remove("pt-in", "pt-reveal");
+      root.classList.add("pt-out");
+      setTimeout(() => { location.href = url.href; }, 720);
+    });
+    // Warm the cache for the next page as soon as the pointer heads towards a link
+    const prefetched = new Set();
+    const prefetch = (e) => {
+      const url = internalPage(e.target.closest && e.target.closest("a[href]"));
+      if (!url || prefetched.has(url.pathname)) return;
+      prefetched.add(url.pathname);
+      const l = d.createElement("link"); l.rel = "prefetch"; l.href = url.pathname; d.head.appendChild(l);
+    };
+    d.addEventListener("pointerover", prefetch, { passive: true });
+    d.addEventListener("touchstart", prefetch, { passive: true });
+  }
+  // Coming back via the browser's back/forward cache: lift the curtain
+  addEventListener("pageshow", (e) => { if (e.persisted) { leaving = false; root.classList.remove("pt-out", "pt-in", "pt-reveal"); } });
+
   /* ---------- Page entrance ---------- */
   let loaded = false;
-  const markLoaded = () => { if (loaded) return; loaded = true; requestAnimationFrame(() => root.classList.add("is-loaded")); };
+  const markLoaded = () => { if (loaded) return; loaded = true; setTimeout(() => requestAnimationFrame(() => root.classList.add("is-loaded")), arriving ? 260 : 0); };
   if (d.fonts && d.fonts.ready) d.fonts.ready.then(markLoaded);
   setTimeout(markLoaded, 700);
 
@@ -304,6 +357,15 @@
     $$("[data-parallax]").forEach((el) => {
       gsap.fromTo(el, { yPercent: -6 }, { yPercent: 6, ease: "none", scrollTrigger: { trigger: el.parentElement, start: "top bottom", end: "bottom top", scrub: true } });
     });
+
+    // Footer wordmark: letters rise into place as the footer scrolls in
+    const wm = $$(".wm-ch");
+    if (wm.length) {
+      gsap.fromTo(wm, { yPercent: 110, rotate: 9, opacity: 0 }, {
+        yPercent: 0, rotate: 0, opacity: 1, ease: "none", stagger: 0.07,
+        scrollTrigger: { trigger: ".wordmark", start: "top bottom", end: "bottom bottom", scrub: 0.9 },
+      });
+    }
 
     // Recalculate once images/fonts settle
     addEventListener("load", () => ScrollTrigger.refresh());
