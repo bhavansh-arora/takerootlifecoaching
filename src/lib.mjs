@@ -84,7 +84,7 @@ export const imgUrl = (name, width, base = "") => {
   return `${base}assets/img/${name}-${pick[0]}.webp`;
 };
 
-export const sh = (num, label, meta = "") => `<div class="sh" data-reveal="fade"><span><b>(${num})</b> — ${label}</span>${meta ? `<span>${meta}</span>` : ""}</div>`;
+export const sh = (num, label, meta = "") => `<div class="sh" data-reveal="fade"><span><b>(${num})</b><i> — </i>${label}</span>${meta ? `<span>${meta}</span>` : ""}</div>`;
 
 /* Decorative root lines used behind inner-page heroes */
 export const rootLines = `<svg class="phero-roots" viewBox="0 0 560 620" fill="none" stroke="currentColor" stroke-linecap="round" aria-hidden="true">
@@ -238,7 +238,8 @@ ${noindex ? '<meta name="robots" content="noindex, nofollow">' : `<link rel="can
 <script>(function(d){d.classList.add('js');try{if(sessionStorage.getItem('tr-pt')&&!matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('pt-in')}catch(e){}setTimeout(function(){if(!d.classList.contains('is-ready')){d.classList.remove('js');d.classList.remove('pt-in')}},3000)})(document.documentElement);</script>
 <script type="application/ld+json">${JSON.stringify(ld.length === 1 ? ld[0] : ld)}</script>
 </head>
-<body id="top" class="${bodyClass}">
+<body id="top" class="${slug === "home" ? "is-home" : "inner"} ${bodyClass}">
+<div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
 <div class="pt" aria-hidden="true">
   <div class="pt-layer pt-layer--clay"></div>
   <div class="pt-layer pt-layer--forest"><div class="pt-center"><img src="${base}assets/img/logo-mark-sm.png" width="196" height="240" alt=""><span class="pt-kicker">take root</span><span class="pt-label" id="pt-label">Take Root</span></div></div>
@@ -249,6 +250,7 @@ ${header(base, current)}
 ${body}
 </main>
 ${footer(base, cta)}
+<script src="${base}assets/vendor/lenis.min.js" defer></script>
 <script src="${base}assets/vendor/gsap.min.js" defer></script>
 <script src="${base}assets/vendor/ScrollTrigger.min.js" defer></script>
 <script src="${base}assets/js/main.js" defer></script>
@@ -259,9 +261,26 @@ ${scripts.map((s) => `<script src="${base}assets/js/${s}" defer></script>`).join
 }
 
 /** Inner page hero, shared by every page except home. */
-export function phero({ crumbs = [], title, lead = "", media = "", mediaAlt = "", mediaPos = "", caption = "", meta = [], buttons = "", base = "", long = false, side = "" }) {
+export function phero({ crumbs = [], title, lead = "", media = "", mediaAlt = "", mediaPos = "", caption = "", meta = [], buttons = "", base = "", long = false, side = "", theme = "forest", layout = "split", extra = "" }) {
   const lines = title.map((t) => `<span class="line"><span>${t}</span></span>`).join("");
-  return `<section class="phero">
+  const light = theme === "sand" || theme === "paper";
+  if (layout === "masthead" || layout === "center") {
+    return `<section class="phero phero--${theme} phero--${layout}${light ? " phero--light" : ""}">
+  ${rootLines}
+  <div class="wrap">
+    <nav class="crumbs fade-in" aria-label="Breadcrumb"><a href="${base}index.html">Home</a>${crumbs.map((c) => `<i></i>${c}`).join("")}</nav>
+    <h1 class="h1${long ? " is-long" : ""}">${lines}</h1>
+    <div class="phero-row">
+      ${lead ? `<p class="lead fade-in">${lead}</p>` : "<span></span>"}
+      ${buttons ? `<div class="btn-row fade-in">${buttons}</div>` : ""}
+    </div>
+    ${extra}
+    ${media ? `<figure class="phero-media phero-media--wide">${img(media, { alt: mediaAlt, sizes: "(max-width: 1320px) 100vw, 1320px", eager: true, base, style: mediaPos ? `object-position:${mediaPos}` : "" })}${caption ? `<figcaption>${caption}</figcaption>` : ""}</figure>` : ""}
+    ${meta.length ? `<div class="phero-meta fade-in">${meta.map((m) => `<span>${m}</span>`).join("")}</div>` : ""}
+  </div>
+</section>`;
+  }
+  return `<section class="phero phero--${theme} phero--${layout}${light ? " phero--light" : ""}">
   ${rootLines}
   <div class="wrap">
     <div class="phero-grid">
@@ -316,7 +335,7 @@ export const faqs = [
   ["What’s your cancellation policy?", "Fees are paid in advance when you book each session. If you need to cancel or reschedule, I ask for at least 24 hours’ notice. Cancellations made within 24 hours of your appointment are subject to a $50 fee, and missed sessions aren’t reimbursed or rescheduled unless we’ve agreed on that in advance."],
 ];
 
-export const faqItem = ([q, a], i) => `<details class="faq-item"${i === 0 ? " open" : ""}>
+export const faqItem = ([q, a], i) => `<details class="faq-item" id="q${i + 1}"${i === 0 ? " open" : ""}>
   <summary><span class="mono">${String(i + 1).padStart(2, "0")}</span><h3>${q}</h3><span class="plus" aria-hidden="true"></span></summary>
   <div class="faq-body"><div><p>${a}</p></div></div>
 </details>`;
@@ -327,7 +346,7 @@ export const faqSchema = (list) => ({
   mainEntity: list.map(([q, a]) => ({ "@type": "Question", name: strip(q), acceptedAnswer: { "@type": "Answer", text: strip(a) } })),
 });
 
-export const postCard = (p, base = "", i = 0) => `<a class="post-card" href="${base}journal/${p.slug}.html" data-reveal style="--d:${(i % 3) * 0.08}s">
+export const postCard = (p, base = "", i = 0) => `<a class="post-card" data-cursor="Read" href="${base}journal/${p.slug}.html" data-reveal style="--d:${(i % 3) * 0.08}s">
   <div class="media">${img(p.image, { alt: "", sizes: "(max-width: 760px) 100vw, (max-width: 1024px) 50vw, 33vw", base })}${arrowDot}</div>
   <div class="post-meta"><span class="tag">${p.tag}</span><i></i><span>${fmtDate(p.date)}</span><i></i><span>${p.minutes} min</span></div>
   <h3>${p.title}</h3>

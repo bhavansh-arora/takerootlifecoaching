@@ -8,10 +8,10 @@ ${phero({
   title: ["Notes on growing,", "<em>letting go</em> &amp;", "finding your footing."],
   long: true,
   lead: "Honest stories from everyday life — gardens, CrossFit, teenagers and trash cans — and what they teach us about boundaries, balance and change.",
-  media: "post-garden",
-  mediaAlt: "Small blue flowers growing through dry leaves",
-  caption: `<span>${posts.length} entries</span><span>By Adrienne Phelps</span>`,
-  meta: [...new Set(posts.map((p) => p.tag))].slice(0, 5),
+  theme: "paper",
+  layout: "masthead",
+  extra: `<nav class="phero-jump fade-in" aria-label="Journal topics">${posts.map((p) => `<a class="chip" href="journal/${p.slug}.html">${p.tag}</a>`).join("")}</nav>`,
+  meta: [`${posts.length} entries`, "By Adrienne Phelps", "Stories · reflections · nudges"],
 })}
 
 <section class="section">
@@ -45,6 +45,8 @@ ${phero({
   title: [p.title],
   long: true,
   lead: `${fmtDate(p.date)} · ${p.minutes} min read · By Adrienne Phelps`,
+  theme: "paper",
+  layout: "center",
   media: p.image,
   mediaAlt: "",
   caption: `<span>${p.tag}</span><span>Take Root Journal</span>`,
@@ -76,6 +78,7 @@ ${phero({
     path: `journal/${p.slug}.html`,
     html: page({
       slug: "article", path: `journal/${p.slug}.html`, base, title: strip(p.title), description: desc, current: "journal", body,
+      cta: { title: "If this one <em>landed</em>, let’s talk.", text: "Bring whatever it stirred up to a free 30-minute First Step call — no pressure, just an honest conversation." },
       ogImage: `${p.image}-1200.webp`,
       schema: [{
         "@context": "https://schema.org", "@type": "BlogPosting", headline: strip(p.title), datePublished: p.date,
@@ -87,6 +90,6 @@ ${phero({
 });
 
 export default [
-  { path: "journal.html", html: page({ slug: "journal", path: "journal.html", title: "Journal", description: "Reflections from life coach Adrienne Phelps on letting go, boundaries, balance, decisions and finding your footing.", current: "journal", body: index }) },
+  { path: "journal.html", html: page({ slug: "journal", path: "journal.html", title: "Journal", description: "Reflections from life coach Adrienne Phelps on letting go, boundaries, balance, decisions and finding your footing.", current: "journal", body: index, cta: { title: "Ready for your <em>next chapter?</em>", text: "The stories are a start. A free 30-minute call is where we figure out yours." } }) },
   ...articles,
 ];

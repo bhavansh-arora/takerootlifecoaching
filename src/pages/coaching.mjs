@@ -169,6 +169,7 @@ export default {
     title: "Coaching & Pricing",
     description: "Whole-person life coaching sessions with Adrienne Phelps. Free 30-minute First Step call, single sessions ($150) and a 3-session package ($390). All sessions held virtually.",
     current: "coaching",
+    cta: { title: "Your first step is <em>free.</em>", text: "Start with a 30-minute First Step call. If it feels right, choose a single session or the 3-session package together." },
     body,
     schema: [{
       "@context": "https://schema.org", "@type": "Service", name: "Whole-person life coaching", provider: { "@id": `${SITE.url}/#business` },

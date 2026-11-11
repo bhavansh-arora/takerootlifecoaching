@@ -23,7 +23,9 @@ ${phero({
   title: ["Find your footing.", "<em>Choose your path.</em>"],
   long: true,
   lead: "Whatever brought you here — a transition, a decision, or a quiet sense that something important is missing — you don’t have to figure it out alone.",
-  buttons: btn("Book a free call", "work-with-me.html", "btn--clay") + btn("How coaching works", "coaching.html", "btn--ghost-light"),
+  buttons: btn("Book a free call", "work-with-me.html", "btn--clay") + btn("How coaching works", "coaching.html", "btn--ghost"),
+  theme: "sand",
+  layout: "split-rev",
   media: "adrienne-standing",
   mediaAlt: "Adrienne Phelps, life coach and founder of Take Root Life Coaching",
   caption: "<span>Adrienne Phelps</span><span>Founder · Life coach</span>",
@@ -123,11 +125,15 @@ ${phero({
 
 <section class="section" style="padding-top:0">
   <div class="wrap">
-    ${sh("06", "Kind words", "From real clients")}
-    <div class="bento">
-      <div class="b-7">${tCard(testimonials[1], 0, "height:100%;min-height:0")}</div>
-      <div class="b-5">${tCard(testimonials[0], 0, "height:100%;min-height:0")}</div>
-    </div>
+    ${sh("06", "In her words", "Elizabeth K. · coaching client")}
+    <figure class="quote-feature">
+      <span class="qf-mark" aria-hidden="true">“</span>
+      <blockquote class="qf-big h2 balance">I have reached a point in my life and career where I am feeling <em>happy and successful.</em></blockquote>
+      <figcaption class="qf-body" data-reveal>
+        <p>“I had a major life and career shift over the span of a few months, including moving across the country, and Adrienne was more than helpful at pointing me in the right direction. She gave me confidence to try new things and go outside my comfort zone. I would utilize her life coaching skills again, no questions asked!”</p>
+        <div class="t-who"><span class="avatar avatar--clay">E</span><div><b>Elizabeth K.</b><span>Coaching client</span></div></div>
+      </figcaption>
+    </figure>
   </div>
 </section>
 `;
@@ -140,6 +146,7 @@ export default {
     title: "About Adrienne Phelps",
     description: "Meet Adrienne Phelps — Strategic Intervention certified life coach and Duke Health & Well-Being Coach. Whole-person coaching with warmth, honesty and zero judgment.",
     current: "about",
+    cta: { title: "Let’s figure it out <em>together.</em>", text: "You don’t need all the answers yet. Thirty minutes, free and on video — we’ll start wherever you are." },
     body,
     schema: [{
       "@context": "https://schema.org", "@type": "Person", name: "Adrienne Phelps", jobTitle: "Life Coach",

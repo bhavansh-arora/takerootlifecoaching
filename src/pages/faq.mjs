@@ -5,11 +5,10 @@ ${phero({
   crumbs: ["FAQ"],
   title: ["Your questions,", "<em>answered.</em>"],
   lead: "Everything you might be wondering before you reach out — from how coaching differs from therapy to what a session actually feels like.",
-  buttons: btn("Book a free call", "work-with-me.html", "btn--clay") + btn("Ask your own question", "contact.html", "btn--ghost-light"),
-  media: "conversation",
-  mediaAlt: "Two women talking in front of a laptop",
-  caption: `<span>${faqs.length} questions</span><span>Answered by Adrienne</span>`,
-  meta: ["Coaching vs therapy", "Sessions &amp; pricing", "Confidentiality", "Cancellations"],
+  buttons: btn("Book a free call", "work-with-me.html", "btn--clay") + btn("Ask your own question", "contact.html", "btn--ghost"),
+  theme: "paper",
+  layout: "masthead",
+  extra: `<nav class="phero-jump fade-in" aria-label="Jump to a question">${["Coaching vs therapy", "What to expect", "Who it’s for", "Is it right for me?", "Confidentiality", "Session length", "Virtual sessions", "Cost &amp; packages", "Commitment", "Cancellations"].map((t, i) => `<a class="chip" href="#q${i + 1}">${t}</a>`).join("")}</nav>`,
 })}
 
 <section class="section">
@@ -37,5 +36,6 @@ export default {
     slug: "faq", path: "faq.html", title: "FAQ",
     description: "Answers about life coaching with Adrienne Phelps: how coaching differs from therapy, what to expect in a session, pricing, confidentiality and cancellations.",
     current: "faq", body, schema: [faqSchema(faqs)],
+    cta: { title: "Still have a <em>question?</em>", text: "Ask me directly, or talk it through on a free 30-minute call. There’s no such thing as a silly question here." },
   }),
 };

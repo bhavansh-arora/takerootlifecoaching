@@ -11,12 +11,11 @@ ${phero({
   crumbs: ["Contact"],
   title: ["Talk to <em>me.</em>"],
   lead: "Questions, feedback, or just not sure where to start? Send a note and I’ll respond personally as soon as possible.",
-  buttons: btn("Write to me", "#message", "btn--clay") + btn("Book a free call", "work-with-me.html", "btn--ghost-light"),
-  media: "adrienne-cafe",
-  mediaPos: "50% 56%",
-  mediaAlt: "Adrienne at a café table with her laptop",
-  caption: "<span>Replies from Adrienne</span><span>Personally</span>",
-  meta: [SITE.email, "Raleigh, NC area", "Sessions held virtually"],
+  buttons: btn("Write to me", "#message", "btn--clay") + btn("Book a free call", "work-with-me.html", "btn--ghost"),
+  theme: "sand",
+  layout: "masthead",
+  extra: `<a class="mega-link fade-in" href="mailto:${SITE.email}"><span>${SITE.email}</span><span class="arrow-dot">${icons.arrow}</span></a>`,
+  meta: ["Replies personally", "Raleigh, NC area", "Sessions held virtually"],
 })}
 
 <section class="section" id="message" style="scroll-margin-top:40px">

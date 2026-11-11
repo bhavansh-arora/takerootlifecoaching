@@ -15,9 +15,15 @@ ${phero({
   title: ["The Footing", "<em>Check.</em>"],
   lead: "Six roots. Two minutes. A clear, private snapshot of where you feel grounded — and where you might be stuck. Bring it to your free call and we’ll start right where it matters.",
   buttons: btn("Start the check", "#tool", "btn--clay"),
-  media: "roots-grass",
-  mediaAlt: "Green shoots with roots visible in dark soil",
-  caption: "<span>Free · private</span><span>2 minutes</span>",
+  side: `<div class="demo-wheel fade-in" data-demo-wheel aria-hidden="true">
+    <svg viewBox="-70 -40 540 480">
+      ${[2, 4, 6, 8, 10].map((v) => `<polygon class="dw-ring" points="${[0, 1, 2, 3, 4, 5].map((i) => { const a = (-90 + 60 * i) * Math.PI / 180; return `${(200 + Math.cos(a) * 16 * v).toFixed(1)},${(200 + Math.sin(a) * 16 * v).toFixed(1)}`; }).join(" ")}"/>`).join("")}
+      ${[0, 1, 2, 3, 4, 5].map((i) => { const a = (-90 + 60 * i) * Math.PI / 180; return `<line class="dw-axis" x1="200" y1="200" x2="${(200 + Math.cos(a) * 160).toFixed(1)}" y2="${(200 + Math.sin(a) * 160).toFixed(1)}"/>`; }).join("")}
+      <polygon class="dw-shape" points="200,104 283,152 283,248 200,296 117,248 117,152"/>
+      ${["Career", "Health", "People", "Purpose", "Balance", "Growth"].map((l, i) => { const a = (-90 + 60 * i) * Math.PI / 180; const x = 200 + Math.cos(a) * 196, y = 200 + Math.sin(a) * 196; return `<text class="dw-lbl" x="${x.toFixed(1)}" y="${(y + 6).toFixed(1)}" text-anchor="${Math.abs(x - 200) < 5 ? "middle" : x > 200 ? "start" : "end"}">${l}</text>`; }).join("")}
+    </svg>
+    <span class="dw-cap"><i></i> Live preview · your wheel updates as you go</span>
+  </div>`,
   meta: ["Nothing leaves your browser", "No sign-up", "Whole-person view"],
 })}
 

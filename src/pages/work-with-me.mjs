@@ -8,7 +8,8 @@ ${phero({
   title: ["You’ve found your way here.", "<em>That’s the first step.</em>"],
   long: true,
   lead: "Whether something has been quietly nagging at you for a while or you’ve reached a point where you know something needs to change — reaching out takes courage. I’m glad you’re here.",
-  buttons: btn("Choose a time", "#book", "btn--clay") + btn("Ask a question first", "contact.html", "btn--ghost-light"),
+  buttons: btn("Choose a time", "#book", "") + btn("Ask a question first", "contact.html", "btn--ghost-light"),
+  theme: "clay",
   media: "adrienne-sofa",
   mediaAlt: "Adrienne Phelps smiling on a sofa",
   caption: "<span>Free · 30 minutes</span><span>No pressure</span>",
@@ -99,11 +100,10 @@ ${phero({
 
 <section class="section" style="padding-top:0">
   <div class="wrap">
-    ${sh("03", "Kind words", "From real clients")}
-    <div class="bento">
-      <div class="b-6">${tCard(testimonials[2], 0, "height:100%;min-height:0")}</div>
-      <div class="b-6">${tCard(testimonials[3], 0, "height:100%;min-height:0")}</div>
-    </div>
+    <figure class="quote-strip">
+      <blockquote class="h3 balance">“Talking to Adrienne helped me feel like it was possible to do things beyond what I thought I could do and <em>helped me become a better me.</em>”</blockquote>
+      <figcaption data-reveal><span class="avatar avatar--moss">A</span><span><b>Anne K.</b>Coaching client</span></figcaption>
+    </figure>
   </div>
 </section>
 `;
