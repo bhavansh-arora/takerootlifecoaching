@@ -61,6 +61,14 @@
   // Coming back via the browser's back/forward cache: lift the curtain
   addEventListener("pageshow", (e) => { if (e.persisted) { leaving = false; root.classList.remove("pt-out", "pt-in", "pt-reveal"); } });
 
+  /* ---------- Live local time in the footer ---------- */
+  const clock = $("[data-clock]");
+  if (clock) {
+    const fmt = new Intl.DateTimeFormat("en-US", { hour: "numeric", minute: "2-digit", timeZone: "America/New_York" });
+    const tick = () => { clock.textContent = `· ${fmt.format(new Date())} ET`; };
+    tick(); setInterval(tick, 30000);
+  }
+
   /* ---------- Page entrance ---------- */
   let loaded = false;
   const markLoaded = () => { if (loaded) return; loaded = true; setTimeout(() => requestAnimationFrame(() => root.classList.add("is-loaded")), arriving ? 260 : 0); };
@@ -517,13 +525,48 @@
       gsap.fromTo(el, { yPercent: -6 }, { yPercent: 6, ease: "none", scrollTrigger: { trigger: el.parentElement, start: "top bottom", end: "bottom top", scrub: true } });
     });
 
-    // Footer wordmark: letters rise into place as the footer scrolls in
-    const wm = $$(".wm-ch");
-    if (wm.length) {
-      gsap.fromTo(wm, { yPercent: 110, rotate: 9, opacity: 0 }, {
-        yPercent: 0, rotate: 0, opacity: 1, ease: "none", stagger: 0.07,
-        scrollTrigger: { trigger: ".wordmark", start: "top bottom", end: "bottom bottom", scrub: 0.9 },
+    /* Footer: opens out, rules draw, content rises, lettering lands and roots grow */
+    const footer = $(".footer");
+    if (footer) {
+      const radius = getComputedStyle(footer).borderTopLeftRadius || "28px";
+      gsap.fromTo(footer, { clipPath: `inset(7% 3.5% 0% 3.5% round 72px)` }, {
+        clipPath: `inset(0% 0% 0% 0% round ${radius})`, ease: "none",
+        scrollTrigger: { trigger: footer, start: "top bottom", end: "top 35%", scrub: 0.6 },
       });
+      const fRules = $$(".f-rule", footer);
+      gsap.set(fRules, { "--ln": 0 });
+      const ups = $$(".footer-cta .f-up", footer);
+      gsap.set(ups, { y: 36, opacity: 0 });
+      ScrollTrigger.create({ trigger: ".footer-cta", start: "top 82%", once: true, onEnter: () => {
+        gsap.to(ups, { y: 0, opacity: 1, duration: 1, ease: "expo.out", stagger: 0.1 });
+        gsap.to(fRules[0], { "--ln": 1, duration: 1.4, ease: "expo.inOut", delay: 0.2 });
+      } });
+      const gridBits = $$(".footer-brand > *, .footer-col h4, .footer-col li", footer);
+      gsap.set(gridBits, { y: 24, opacity: 0 });
+      ScrollTrigger.create({ trigger: ".footer-grid", start: "top 88%", once: true, onEnter: () => {
+        gsap.to(gridBits, { y: 0, opacity: 1, duration: 0.9, ease: "power3.out", stagger: 0.035 });
+      } });
+      const chars = $$(".wm-ch", footer);
+      const roots = $$(".footer-roots path", footer);
+      roots.forEach((p) => { const L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; });
+      const tl = gsap.timeline({ scrollTrigger: { trigger: ".footer-mark", start: "top bottom", end: "bottom bottom", scrub: 0.9 } });
+      tl.fromTo(chars, { yPercent: 115, rotate: 10, opacity: 0 }, { yPercent: 0, rotate: 0, opacity: 1, ease: "none", stagger: 0.08, duration: 0.6 }, 0)
+        .to(roots, { strokeDashoffset: 0, ease: "none", stagger: 0.012, duration: 0.5 }, 0.35)
+        .to(fRules[1] || {}, { "--ln": 1, ease: "none", duration: 0.4 }, 0.6);
+      // Letters ripple away from the mouse
+      const mark = $(".footer-mark", footer);
+      if (fine && mark) {
+        mark.addEventListener("pointermove", (e) => {
+          chars.forEach((c) => {
+            const r = c.getBoundingClientRect();
+            const dx = e.clientX - (r.left + r.width / 2);
+            const f = Math.max(0, 1 - Math.abs(dx) / 260);
+            c.style.translate = `0 ${(-f * 0.1).toFixed(3)}em`;
+            c.style.rotate = `${(f * (dx > 0 ? -4 : 4)).toFixed(2)}deg`;
+          });
+        });
+        mark.addEventListener("pointerleave", () => chars.forEach((c) => { c.style.translate = ""; c.style.rotate = ""; }));
+      }
     }
 
     // Recalculate once images/fonts settle

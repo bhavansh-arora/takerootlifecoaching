@@ -134,6 +134,34 @@ function header(base, current) {
 
 const wmChars = (word) => [...word].map((c) => `<span class="wm-ch">${c}</span>`).join("");
 
+/* Fine roots that fan out beneath the footer lettering (deterministic, so builds are stable) */
+const footerRoots = (() => {
+  let seed = 7;
+  const rnd = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+  const W = 1400, H = 220, N = 11, paths = [];
+  const f = (n) => n.toFixed(1);
+  for (let i = 0; i < N; i++) {
+    const x0 = 300 + i * (800 / (N - 1)) + (rnd() - 0.5) * 24;
+    const spread = (x0 - W / 2) / (W / 2);                  // -0.57 … 0.57: outer roots lean outwards
+    const ex = x0 + spread * (220 + rnd() * 80) + (rnd() - 0.5) * 30;
+    const ey = H * (0.72 + rnd() * 0.28);
+    const c1x = x0 + (rnd() - 0.5) * 10, c1y = ey * 0.38;
+    const c2x = x0 + spread * 110, c2y = ey * 0.62;
+    paths.push({ d: `M${f(x0)} 0 C ${f(c1x)} ${f(c1y)}, ${f(c2x)} ${f(c2y)}, ${f(ex)} ${f(ey)}`, w: 1.4, main: true });
+    // two short side roots leaving the main root and curling outwards
+    for (let k = 0; k < 2; k++) {
+      const t = 0.3 + k * 0.28 + rnd() * 0.08;
+      const bx = x0 + (c2x - x0) * t * t + (ex - x0) * t * t * t * 0.3;
+      const by = ey * t;
+      const dir = (k === 0 ? -1 : 1) * (spread >= 0 ? 1 : -1);
+      const len = 36 + rnd() * 46;
+      const bex = bx + dir * len, bey = by + len * (0.7 + rnd() * 0.5);
+      paths.push({ d: `M${f(bx)} ${f(by)} Q ${f(bx + dir * len * 0.2)} ${f(by + len * 0.55)}, ${f(bex)} ${f(Math.min(H, bey))}`, w: 0.8 });
+    }
+  }
+  return `<svg class="footer-roots" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" fill="none" stroke-linecap="round" aria-hidden="true">${paths.map((p) => `<path${p.main ? ' class="main"' : ""} d="${p.d}" stroke-width="${p.w}" vector-effect="non-scaling-stroke"/>`).join("")}</svg>`;
+})();
+
 function footer(base, cta = {}) {
   const title = cta.title || `Ready to take root and <em>thrive?</em>`;
   const text = cta.text || `Let’s chat to see if coaching is a good fit for you. Thirty minutes, free, and no pressure — just an honest conversation.`;
@@ -142,19 +170,20 @@ function footer(base, cta = {}) {
   <div class="wrap">
     <div class="footer-cta">
       <div>
-        <div class="eyebrow" data-reveal="fade"><span class="dot"></span> Your next chapter</div>
-        <h2 class="h2 balance" data-reveal>${title}</h2>
+        <div class="eyebrow f-up"><span class="dot"></span> Your next chapter</div>
+        <h2 class="h2 balance">${title}</h2>
       </div>
-      <div data-reveal style="--d:.1s">
+      <div class="f-up">
         <p>${text}</p>
         <div class="btn-row">
           ${btn("Book a free call", `${base}work-with-me.html`, "btn--clay")}
           ${btn("Send a message", `${base}contact.html`, "btn--ghost-light btn--plain")}
         </div>
       </div>
+      <span class="f-rule" aria-hidden="true"></span>
     </div>
     <div class="footer-grid">
-      <div class="footer-brand" data-reveal>
+      <div class="footer-brand">
         <a class="brand" href="${base}index.html" aria-label="Take Root Life Coaching — home">
           <img src="${base}assets/img/logo-mark-sm.png" width="196" height="240" alt="">
           <span class="brand-text"><span class="brand-name">take root</span><span class="brand-sub">Life Coaching</span></span>
@@ -166,22 +195,27 @@ function footer(base, cta = {}) {
           <a href="mailto:${SITE.email}" aria-label="Email Adrienne">${icons.mail}</a>
         </div>
       </div>
-      <div class="footer-col" data-reveal style="--d:.08s"><h4>Explore</h4><ul>
+      <div class="footer-col"><h4>Explore</h4><ul>
         <li><a href="${base}index.html">Home</a></li><li><a href="${base}about.html">About Adrienne</a></li>
         <li><a href="${base}journal.html">Journal</a></li><li><a href="${base}faq.html">FAQ</a></li></ul></div>
-      <div class="footer-col" data-reveal style="--d:.16s"><h4>Work together</h4><ul>
+      <div class="footer-col"><h4>Work together</h4><ul>
         <li><a href="${base}coaching.html">Coaching &amp; pricing</a></li><li><a href="${base}work-with-me.html">Book a session</a></li>
         <li><a href="${base}footing-check.html">The Footing Check</a></li><li><a href="${base}contact.html">Contact</a></li></ul></div>
-      <div class="footer-col" data-reveal style="--d:.24s"><h4>Say hello</h4><ul>
+      <div class="footer-col"><h4>Say hello</h4><ul>
         <li><a href="mailto:${SITE.email}">${SITE.email}</a></li><li><a href="${SITE.instagram}" target="_blank" rel="noopener">Instagram</a></li>
         <li><a href="${SITE.facebook}" target="_blank" rel="noopener">Facebook</a></li><li><span class="muted" style="color:var(--on-dark-muted)">Raleigh, NC · Virtual</span></li></ul></div>
     </div>
   </div>
-  <div class="wordmark" aria-hidden="true"><span class="wm-word">${wmChars("take")}</span><span class="wm-word wm-word--i">${wmChars("root")}</span></div>
+  <div class="footer-mark" aria-hidden="true">
+    <div class="wordmark"><span class="wm-word">${wmChars("take")}</span><span class="wm-word wm-word--i">${wmChars("root")}</span></div>
+    ${footerRoots}
+  </div>
   <div class="wrap footer-bar">
+    <span class="f-rule f-rule--top" aria-hidden="true"></span>
     <span>© ${year} Take Root Life Coaching, LLC</span>
-    <nav aria-label="Legal"><a href="${SITE.privacy}">Privacy</a><a href="${SITE.terms}">Terms</a><a href="#top" data-top>Back to top ↑</a></nav>
-    <span>Site by <a href="https://codebunny.net" target="_blank" rel="noopener">Code Bunny</a></span>
+    <span class="f-clock"><i></i>Raleigh, NC <b data-clock>· Eastern time</b></span>
+    <nav aria-label="Legal"><a href="${SITE.privacy}">Privacy</a><a href="${SITE.terms}">Terms</a><span>Site by <a href="https://codebunny.net" target="_blank" rel="noopener">Code Bunny</a></span></nav>
+    <a class="f-top" href="#top" data-top aria-label="Back to top">${arrow}</a>
   </div>
 </footer>
 <div class="sticky-book" id="sticky-book" aria-hidden="true">
