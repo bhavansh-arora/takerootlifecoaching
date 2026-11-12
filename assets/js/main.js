@@ -80,7 +80,7 @@
     panels[0].before(holder);
     panels.forEach((p) => holder.appendChild(p));
     const DUR = 7000;
-    let cur = 0, timer = null, inView = false, hovering = false, busy = false;
+    let cur = 0, timer = null, inView = false, hovering = false;
     const words = (p) => $$(".wi", p);
     const animated = !reduce && window.gsap;
     if (animated) panels.forEach((p) => {
@@ -113,7 +113,7 @@
     const schedule = () => { clearTimeout(timer); if (inView && !hovering && !reduce) timer = setTimeout(() => show((cur + 1) % panels.length), DUR); };
     const restartBar = (tab) => { const bar = $(".ts-bar i", tab); if (!bar) return; bar.style.animation = "none"; void bar.offsetWidth; bar.style.animation = ""; };
     const show = (i, focus) => {
-      if (i === cur || busy) { schedule(); return; }
+      if (i === cur) { schedule(); return; }
       const oldP = panels[cur], newP = panels[i];
       tabs.forEach((t, k) => { t.setAttribute("aria-selected", String(k === i)); t.tabIndex = k === i ? 0 : -1; });
       restartBar(tabs[i]);
@@ -121,15 +121,12 @@
       if (countEl) countEl.textContent = String(i + 1).padStart(2, "0");
       cur = i;
       if (!animated) { oldP.hidden = true; newP.hidden = false; schedule(); return; }
-      busy = true;
       const g = window.gsap;
-      g.to(words(oldP), { yPercent: -115, duration: 0.42, ease: "power2.in", stagger: 0.006 });
-      g.to($(".ts-full", oldP), { opacity: 0, y: -10, duration: 0.3, onComplete: () => {
-        oldP.hidden = true; newP.hidden = false;
-        g.fromTo(words(newP), { yPercent: 115, rotate: 3 }, { yPercent: 0, rotate: 0, duration: 1, ease: "expo.out", stagger: 0.016 });
-        g.fromTo($(".ts-full", newP), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.8, delay: 0.25, ease: "power3.out", onComplete: () => { busy = false; } });
-        schedule();
-      } });
+      panels.forEach((p) => { g.killTweensOf(words(p)); g.killTweensOf($(".ts-full", p)); if (p !== newP) p.hidden = true; });
+      newP.hidden = false;
+      g.fromTo(words(newP), { yPercent: 115, rotate: 3 }, { yPercent: 0, rotate: 0, duration: 0.95, ease: "expo.out", stagger: 0.014 });
+      g.fromTo($(".ts-full", newP), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.15, ease: "power3.out" });
+      schedule();
     };
     tabs.forEach((t, k) => {
       t.addEventListener("click", () => show(k));
@@ -710,26 +707,33 @@
         const px = gsap.quickTo(prev, "x", { duration: 0.55, ease: "power3.out" });
         const py = gsap.quickTo(prev, "y", { duration: 0.55, ease: "power3.out" });
         let lastY = 0;
-        const spot = (r) => {
-          const rr = r.getBoundingClientRect();
-          const textR = $(".f-t", r).getBoundingClientRect().right + 24;   // room for the hover nudge
-          const arrL = $(".f-arr", r).getBoundingClientRect().left - 16;
-          const w = prev.offsetWidth;
-          return arrL - textR >= w ? { x: textR + (arrL - textR) / 2, ok: true, rr } : { ok: false, rr };
+        const clampY = (y) => {
+          const half = prev.offsetHeight / 2 + 12;
+          const f = footer.getBoundingClientRect();
+          const lo = Math.max(half, f.top + half), hi = Math.min(innerHeight - half, f.bottom - half);
+          return hi < lo ? (lo + hi) / 2 : Math.min(hi, Math.max(lo, y));
+        };
+        // A clear column between the longest link name and the arrows, so the photo never covers any text
+        const spot = () => {
+          if (innerWidth <= 1024) return { ok: false };
+          const textR = Math.max(...rowsEls.map((x) => { const t = $(".f-t", x); return x.getBoundingClientRect().left + t.offsetLeft + t.offsetWidth; })) + 30;
+          const arrL = Math.min(...rowsEls.map((x) => $(".f-arr", x).getBoundingClientRect().left)) - 16;
+          const w = prev.offsetWidth * 1.08;   // allow for the slight tilt
+          return arrL - textR >= w ? { x: textR + (arrL - textR) / 2, ok: true } : { ok: false };
         };
         rowsEls.forEach((r) => {
           r.addEventListener("pointerenter", (e) => {
             const s = spot(r);
             if (!s.ok) return;
             pimg.src = r.dataset.img;
-            gsap.set(prev, { x: s.x, y: e.clientY });
+            gsap.set(prev, { x: s.x, y: clampY(e.clientY) });
             gsap.to(prev, { scale: 1, opacity: 1, duration: 0.5, ease: "power3.out" });
           });
           r.addEventListener("pointerleave", () => gsap.to(prev, { scale: 0.6, opacity: 0, duration: 0.35, ease: "power2.in" }));
           r.addEventListener("pointermove", (e) => {
             const s = spot(r);
             if (!s.ok) return;
-            px(s.x); py(e.clientY);
+            px(s.x); py(clampY(e.clientY));
             const v = e.clientY - lastY; lastY = e.clientY;
             gsap.to(prev, { rotate: Math.max(-8, Math.min(8, v * 0.5)), duration: 0.4 });
           });

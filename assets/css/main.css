@@ -1305,3 +1305,10 @@ html.lenis, html.lenis body { height: auto; }
 .ld-out .ld-layer--clay { transform: translateY(-100%); border-radius: 0 0 50% 50% / 0 0 12vh 12vh; transition: transform .95s cubic-bezier(.76, 0, .24, 1) .1s, border-radius .95s cubic-bezier(.76, 0, .24, 1) .1s; }
 .ld-out .ld-center, .ld-out .ld-foot { opacity: 0; transform: translateY(-40px); transition: opacity .35s ease, transform .6s var(--ease); }
 @media (prefers-reduced-motion: reduce) { .loader { display: none !important; } }
+
+/* Code Bunny credit */
+.f-credit { display: inline-flex; align-items: center; gap: 5px; margin-left: 4px; padding: 5px 10px 5px 12px; border-radius: 999px; background: rgba(246, 160, 101, .14); border: 1px solid rgba(246, 160, 101, .4); color: var(--ember); font-weight: 500; transition: background-color .3s, color .3s, border-color .3s; }
+.f-credit svg { width: 11px; height: 11px; transition: transform .4s var(--ease); }
+.f-credit:hover { background: var(--ember); border-color: var(--ember); color: var(--soil); }
+.f-credit:hover svg { transform: translate(1px, -1px); }
+.footer-bar a.f-credit::after { display: none; }
