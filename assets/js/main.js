@@ -171,10 +171,12 @@
   let loaded = false;
   const markLoaded = () => {
     if (loaded) return; loaded = true;
-    const go = () => setTimeout(() => requestAnimationFrame(() => root.classList.add("is-loaded")), arriving ? 260 : preloading ? 150 : 0);
+    const go = () => setTimeout(() => requestAnimationFrame(() => root.classList.add("is-loaded")), arriving ? 120 : preloading ? 150 : 0);
     if (loaderDone) go(); else afterLoader.push(go);
   };
-  if (d.fonts && d.fonts.ready) d.fonts.ready.then(markLoaded);
+  // Arriving through the curtain, fonts are already cached: start the entrance as the curtain lifts
+  if (arriving) markLoaded();
+  else if (d.fonts && d.fonts.ready) d.fonts.ready.then(markLoaded);
   setTimeout(markLoaded, 700);
 
   /* ---------- Navigation ---------- */
