@@ -152,14 +152,9 @@
   if (preloading) {
     if ("scrollRestoration" in history) history.scrollRestoration = "manual";
     scrollTo(0, 0);
-    const countEl = $("[data-ld-count]");
-    const bar = $(".ld-bar i");
-    const t0 = performance.now();
-    let shown = 0;
-    let winLoaded = d.readyState === "complete";
-    addEventListener("load", () => { winLoaded = true; }, { once: true });
-    const MIN = 1700, MAX = 4500;
+    let finished = false;
     const finish = () => {
+      if (finished) return; finished = true;
       setTimeout(() => {
         root.classList.add("ld-out");
         loaderDone = true;
@@ -168,17 +163,8 @@
         setTimeout(() => root.classList.remove("is-preloading", "ld-out"), 1200);
       }, 240);
     };
-    const step = (now) => {
-      const t = now - t0;
-      let target = (1 - Math.pow(1 - Math.min(1, t / MIN), 3)) * 100;
-      if (!winLoaded && t < MAX) target = Math.min(target, 92);
-      shown = Math.max(shown, Math.floor(target));
-      if (countEl) countEl.textContent = String(shown).padStart(3, "0");
-      if (bar) bar.style.transform = `scaleX(${shown / 100})`;
-      if (shown >= 100) { finish(); return; }
-      requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
+    // The counter itself runs inline from first paint (see the loader markup); lift when it reaches 100
+    if (window.__ldDone) finish(); else d.addEventListener("tr:ld100", finish, { once: true });
   }
 
   /* ---------- Page entrance ---------- */

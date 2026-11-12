@@ -254,6 +254,7 @@ ${noindex ? '<meta name="robots" content="noindex, nofollow">' : `<link rel="can
     <div class="ld-bar"><i></i></div>
   </div>
 </div>
+<script>(function(){var d=document.documentElement;if(!d.classList.contains('is-preloading'))return;var c=document.querySelector('[data-ld-count]'),bar=document.querySelector('.ld-bar i'),s=0,st=null,done=document.readyState==='complete';addEventListener('load',function(){done=true});function f(ts){if(!d.classList.contains('is-preloading'))return;if(st===null)st=ts;if(ts-st>6000)done=true;var tg=done?100:90,el=ts-st,p0=s;s+=Math.max(done?1.2:.3,(tg-s)*(done?.14:.035));if(s>tg)s=tg;if(s>el/13)s=el/13;if(s>p0+3)s=p0+3;var v=Math.max(1,Math.floor(s));c.textContent=(v<10?'00':v<100?'0':'')+v;bar.style.transform='scaleX('+(v/100)+')';if(done&&v>=100){window.__ldDone=true;document.dispatchEvent(new Event('tr:ld100'));return}requestAnimationFrame(f)}requestAnimationFrame(f)})();</script>
 <div class="pt" aria-hidden="true">
   <div class="pt-layer pt-layer--clay"></div>
   <div class="pt-layer pt-layer--forest"><div class="pt-center"><img src="${base}assets/img/logo-mark-sm.png" width="196" height="240" alt=""><span class="pt-kicker">take root</span><span class="pt-label" id="pt-label">Take Root</span></div></div>
