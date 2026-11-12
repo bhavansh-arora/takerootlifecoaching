@@ -148,9 +148,49 @@
     }
   }
 
+  /* ---------- Preloader: counts up with real loading, then lifts away ---------- */
+  const preloading = root.classList.contains("is-preloading");
+  let loaderDone = !preloading;
+  const afterLoader = [];
+  if (preloading) {
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    scrollTo(0, 0);
+    const countEl = $("[data-ld-count]");
+    const bar = $(".ld-bar i");
+    const t0 = performance.now();
+    let shown = 0;
+    let winLoaded = d.readyState === "complete";
+    addEventListener("load", () => { winLoaded = true; }, { once: true });
+    const MIN = 1700, MAX = 4500;
+    const finish = () => {
+      setTimeout(() => {
+        root.classList.add("ld-out");
+        loaderDone = true;
+        afterLoader.splice(0).forEach((f) => f());
+        d.dispatchEvent(new Event("tr:loaded"));
+        setTimeout(() => root.classList.remove("is-preloading", "ld-out"), 1200);
+      }, 240);
+    };
+    const step = (now) => {
+      const t = now - t0;
+      let target = (1 - Math.pow(1 - Math.min(1, t / MIN), 3)) * 100;
+      if (!winLoaded && t < MAX) target = Math.min(target, 92);
+      shown = Math.max(shown, Math.floor(target));
+      if (countEl) countEl.textContent = String(shown).padStart(3, "0");
+      if (bar) bar.style.transform = `scaleX(${shown / 100})`;
+      if (shown >= 100) { finish(); return; }
+      requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
   /* ---------- Page entrance ---------- */
   let loaded = false;
-  const markLoaded = () => { if (loaded) return; loaded = true; setTimeout(() => requestAnimationFrame(() => root.classList.add("is-loaded")), arriving ? 260 : 0); };
+  const markLoaded = () => {
+    if (loaded) return; loaded = true;
+    const go = () => setTimeout(() => requestAnimationFrame(() => root.classList.add("is-loaded")), arriving ? 260 : preloading ? 150 : 0);
+    if (loaderDone) go(); else afterLoader.push(go);
+  };
   if (d.fonts && d.fonts.ready) d.fonts.ready.then(markLoaded);
   setTimeout(markLoaded, 700);
 
@@ -390,6 +430,7 @@
     if (fine && window.Lenis) {
       const lenis = new Lenis({ lerp: 0.105, smoothWheel: true, wheelMultiplier: 1 });
       window.__lenis = lenis;
+      if (root.classList.contains("is-preloading")) { lenis.stop(); d.addEventListener("tr:loaded", () => lenis.start(), { once: true }); }
       lenis.on("scroll", ScrollTrigger.update);
       gsap.ticker.add((t) => lenis.raf(t * 1000));
       gsap.ticker.lagSmoothing(0);

@@ -58,7 +58,7 @@ python3 -m http.server 8080
 - Works at phone, tablet and desktop widths, with a sticky booking bar on phones and a full-screen menu
 - Self-hosted fonts (Inter Tight, Fraunces, JetBrains Mono) and responsive WebP images
 - Structured data for the business, person, service, FAQ and articles; Open Graph image; sitemap; robots; web manifest
-- Branded page-change curtain (with prefetching)
+- Branded loader on fresh visits (counts up with real loading) and a page-change curtain (with prefetching)
 - Crossing word ribbons, a testimonial stage that darkens as it arrives, and a footer with a spinning booking disc and a link list with photo previews
 - Smooth scrolling (Lenis), headlines that rise in word by word, photo wipes and parallax, magnetic buttons, a labelled cursor, and a word band that reacts to scroll speed
 - Each inner page has its own header layout and colour

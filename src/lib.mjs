@@ -237,11 +237,23 @@ ${noindex ? '<meta name="robots" content="noindex, nofollow">' : `<link rel="can
 <link rel="preload" href="${base}assets/fonts/inter-tight.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="${base}assets/fonts/fraunces-italic.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="${base}assets/css/main.css">
-<script>(function(d){d.classList.add('js');try{if(sessionStorage.getItem('tr-pt')&&!matchMedia('(prefers-reduced-motion: reduce)').matches)d.classList.add('pt-in')}catch(e){}setTimeout(function(){if(!d.classList.contains('is-ready')){d.classList.remove('js');d.classList.remove('pt-in')}},3000)})(document.documentElement);</script>
+<script>(function(d){d.classList.add('js');var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;try{if(sessionStorage.getItem('tr-pt')&&!rm)d.classList.add('pt-in')}catch(e){}if(!rm&&!d.classList.contains('pt-in'))d.classList.add('is-preloading');setTimeout(function(){if(!d.classList.contains('is-ready')){d.classList.remove('js');d.classList.remove('pt-in');d.classList.remove('is-preloading')}},3000)})(document.documentElement);</script>
 <script type="application/ld+json">${JSON.stringify(ld.length === 1 ? ld[0] : ld)}</script>
 </head>
 <body id="top" class="${slug === "home" ? "is-home" : "inner"} ${bodyClass}">
 <div class="cursor" aria-hidden="true"><span class="cursor-label"></span></div>
+<div class="loader" aria-hidden="true">
+  <div class="ld-layer ld-layer--clay"></div>
+  <div class="ld-layer ld-panel">
+    <div class="ld-center">
+      <img class="ld-mark" src="${base}assets/img/logo-mark-sm.png" width="196" height="240" alt="">
+      <div class="ld-word"><span class="ld-part">${[..."take"].map((c, i) => `<span class="ld-w"><span style="--i:${i}">${c}</span></span>`).join("")}</span><span class="ld-part ld-part--i">${[..."root"].map((c, i) => `<span class="ld-w"><span style="--i:${i + 4}">${c}</span></span>`).join("")}</span></div>
+      <p class="ld-tag mono">Find your footing · Choose your path</p>
+    </div>
+    <div class="ld-foot"><span class="mono">Whole-person life coaching<br>Raleigh, NC · Virtual</span><span class="ld-count"><b data-ld-count>000</b><small>%</small></span></div>
+    <div class="ld-bar"><i></i></div>
+  </div>
+</div>
 <div class="pt" aria-hidden="true">
   <div class="pt-layer pt-layer--clay"></div>
   <div class="pt-layer pt-layer--forest"><div class="pt-center"><img src="${base}assets/img/logo-mark-sm.png" width="196" height="240" alt=""><span class="pt-kicker">take root</span><span class="pt-label" id="pt-label">Take Root</span></div></div>
