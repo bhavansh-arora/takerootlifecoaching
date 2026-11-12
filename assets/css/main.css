@@ -843,7 +843,8 @@ a.card--img:hover > img, .card--img:hover > img { transform: scale(1.05); }
 .footer-col a:hover { color: var(--ember); }
 .footer-bar { position: relative; display: flex; justify-content: space-between; align-items: center; gap: 12px 24px; flex-wrap: wrap; padding-block: 18px 22px; font-family: var(--mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--on-dark-muted); }
 .footer-bar a:hover { color: var(--ember); }
-.footer-bar nav { display: flex; gap: 20px; flex-wrap: wrap; }
+.footer-bar nav { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.footer-bar nav > span { display: inline-flex; align-items: center; gap: 6px; }
 
 /* Page transition curtain */
 .pt { position: fixed; inset: 0; z-index: 200; pointer-events: none; visibility: hidden; }

@@ -693,10 +693,12 @@
         const px = gsap.quickTo(prev, "x", { duration: 0.55, ease: "power3.out" });
         const py = gsap.quickTo(prev, "y", { duration: 0.55, ease: "power3.out" });
         let lastY = 0;
+        // Keep the photo inside the link list (never over the bottom bar) and on screen
+        const idx = $(".f-index", footer);
         const clampY = (y) => {
-          const half = prev.offsetHeight / 2 + 12;
-          const f = footer.getBoundingClientRect();
-          const lo = Math.max(half, f.top + half), hi = Math.min(innerHeight - half, f.bottom - half);
+          const half = prev.offsetHeight / 2 + 20;   // room for the tilt
+          const b = idx.getBoundingClientRect();
+          const lo = Math.max(half, b.top + half), hi = Math.min(innerHeight - half, b.bottom - half);
           return hi < lo ? (lo + hi) / 2 : Math.min(hi, Math.max(lo, y));
         };
         // A clear column between the longest link name and the arrows, so the photo never covers any text
@@ -705,24 +707,30 @@
           const textR = Math.max(...rowsEls.map((x) => { const t = $(".f-t", x); return x.getBoundingClientRect().left + t.offsetLeft + t.offsetWidth; })) + 30;
           const arrL = Math.min(...rowsEls.map((x) => $(".f-arr", x).getBoundingClientRect().left)) - 16;
           const w = prev.offsetWidth * 1.08;   // allow for the slight tilt
-          return arrL - textR >= w ? { x: textR + (arrL - textR) / 2, ok: true } : { ok: false };
+          return arrL - textR >= w ? { x: textR + (arrL - textR) / 2, zone: textR, ok: true } : { ok: false };
+        };
+        let showing = false, current = null;
+        const hide = () => { if (!showing) return; showing = false; gsap.to(prev, { scale: 0.6, opacity: 0, duration: 0.3, ease: "power2.in", overwrite: "auto" }); };
+        // The photo only shows while the pointer is on a link's number or name, not over the arrow side
+        const update = (r, e) => {
+          const s = spot();
+          if (!s.ok || e.clientX > s.zone) { hide(); return; }
+          const y = clampY(e.clientY);
+          if (!showing || current !== r) {
+            if (current !== r) pimg.src = r.dataset.img;
+            current = r;
+            if (!showing) gsap.set(prev, { x: s.x, y });
+            showing = true;
+            gsap.to(prev, { scale: 1, opacity: 1, duration: 0.45, ease: "power3.out", overwrite: "auto" });
+          }
+          px(s.x); py(y);
+          const v = e.clientY - lastY; lastY = e.clientY;
+          gsap.to(prev, { rotate: Math.max(-8, Math.min(8, v * 0.5)), duration: 0.4 });
         };
         rowsEls.forEach((r) => {
-          r.addEventListener("pointerenter", (e) => {
-            const s = spot(r);
-            if (!s.ok) return;
-            pimg.src = r.dataset.img;
-            gsap.set(prev, { x: s.x, y: clampY(e.clientY) });
-            gsap.to(prev, { scale: 1, opacity: 1, duration: 0.5, ease: "power3.out" });
-          });
-          r.addEventListener("pointerleave", () => gsap.to(prev, { scale: 0.6, opacity: 0, duration: 0.35, ease: "power2.in" }));
-          r.addEventListener("pointermove", (e) => {
-            const s = spot(r);
-            if (!s.ok) return;
-            px(s.x); py(clampY(e.clientY));
-            const v = e.clientY - lastY; lastY = e.clientY;
-            gsap.to(prev, { rotate: Math.max(-8, Math.min(8, v * 0.5)), duration: 0.4 });
-          });
+          r.addEventListener("pointerenter", (e) => update(r, e));
+          r.addEventListener("pointermove", (e) => update(r, e));
+          r.addEventListener("pointerleave", hide);
         });
       }
     }
