@@ -132,88 +132,56 @@ function header(base, current) {
 </div>`;
 }
 
-const wmChars = (word) => [...word].map((c) => `<span class="wm-ch">${c}</span>`).join("");
-
-/* Fine roots that fan out beneath the footer lettering (deterministic, so builds are stable) */
-const footerRoots = (() => {
-  let seed = 7;
-  const rnd = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
-  const W = 1400, H = 220, N = 11, paths = [];
-  const f = (n) => n.toFixed(1);
-  for (let i = 0; i < N; i++) {
-    const x0 = 300 + i * (800 / (N - 1)) + (rnd() - 0.5) * 24;
-    const spread = (x0 - W / 2) / (W / 2);                  // -0.57 … 0.57: outer roots lean outwards
-    const ex = x0 + spread * (220 + rnd() * 80) + (rnd() - 0.5) * 30;
-    const ey = H * (0.72 + rnd() * 0.28);
-    const c1x = x0 + (rnd() - 0.5) * 10, c1y = ey * 0.38;
-    const c2x = x0 + spread * 110, c2y = ey * 0.62;
-    paths.push({ d: `M${f(x0)} 0 C ${f(c1x)} ${f(c1y)}, ${f(c2x)} ${f(c2y)}, ${f(ex)} ${f(ey)}`, w: 1.4, main: true });
-    // two short side roots leaving the main root and curling outwards
-    for (let k = 0; k < 2; k++) {
-      const t = 0.3 + k * 0.28 + rnd() * 0.08;
-      const bx = x0 + (c2x - x0) * t * t + (ex - x0) * t * t * t * 0.3;
-      const by = ey * t;
-      const dir = (k === 0 ? -1 : 1) * (spread >= 0 ? 1 : -1);
-      const len = 36 + rnd() * 46;
-      const bex = bx + dir * len, bey = by + len * (0.7 + rnd() * 0.5);
-      paths.push({ d: `M${f(bx)} ${f(by)} Q ${f(bx + dir * len * 0.2)} ${f(by + len * 0.55)}, ${f(bex)} ${f(Math.min(H, bey))}`, w: 0.8 });
-    }
-  }
-  return `<svg class="footer-roots" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" fill="none" stroke-linecap="round" aria-hidden="true">${paths.map((p) => `<path${p.main ? ' class="main"' : ""} d="${p.d}" stroke-width="${p.w}" vector-effect="non-scaling-stroke"/>`).join("")}</svg>`;
-})();
-
 function footer(base, cta = {}) {
   const title = cta.title || `Ready to take root and <em>thrive?</em>`;
   const text = cta.text || `Let’s chat to see if coaching is a good fit for you. Thirty minutes, free, and no pressure — just an honest conversation.`;
   const year = new Date().getFullYear();
+  const rows = [
+    ["About Adrienne", "about.html", "adrienne-standing"],
+    ["Coaching &amp; pricing", "coaching.html", "adrienne-laptop"],
+    ["The Footing Check", "footing-check.html", "roots-grass"],
+    ["Journal", "journal.html", "post-garden"],
+    ["Questions", "faq.html", "conversation"],
+    ["Contact", "contact.html", "adrienne-cafe"],
+  ];
   return `<footer class="footer" role="contentinfo">
   <div class="wrap">
-    <div class="footer-cta">
-      <div>
+    <div class="f-hero">
+      <div class="f-hero-copy">
         <div class="eyebrow f-up"><span class="dot"></span> Your next chapter</div>
-        <h2 class="h2 balance">${title}</h2>
+        <h2 class="f-title balance">${title}</h2>
+        <p class="f-text f-up">${text}</p>
       </div>
-      <div class="f-up">
-        <p>${text}</p>
-        <div class="btn-row">
-          ${btn("Book a free call", `${base}work-with-me.html`, "btn--clay")}
-          ${btn("Send a message", `${base}contact.html`, "btn--ghost-light btn--plain")}
-        </div>
-      </div>
+      <a class="f-disc" href="${base}work-with-me.html" aria-label="Book a free 30-minute call">
+        <svg viewBox="0 0 100 100" aria-hidden="true"><defs><path id="fdisc" d="M50 50 m-39 0 a39 39 0 1 1 78 0 a39 39 0 1 1 -78 0"/></defs><text><textPath href="#fdisc" textLength="242" lengthAdjust="spacing">Book a free call · 30 minutes · no pressure · </textPath></text></svg>
+        <span class="f-disc-core">${arrow}</span>
+      </a>
       <span class="f-rule" aria-hidden="true"></span>
     </div>
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <a class="brand" href="${base}index.html" aria-label="Take Root Life Coaching — home">
-          <img src="${base}assets/img/logo-mark-sm.png" width="196" height="240" alt="">
-          <span class="brand-text"><span class="brand-name">take root</span><span class="brand-sub">Life Coaching</span></span>
-        </a>
-        <p>One-on-one coaching for the whole you — helping you build a life that feels fulfilling, not just manageable.</p>
+    <div class="f-main">
+      <nav class="f-index" aria-label="Footer">
+        ${rows.map(([t, h, im], i) => `<a class="f-row" href="${base}${h}" data-img="${imgUrl(im, 640, base)}"><span class="f-n">0${i + 1}</span><span class="f-t">${t}</span><span class="f-arr">${arrow}</span></a>`).join("")}
+      </nav>
+      <div class="f-contact">
+        <span class="mono">Say hello</span>
+        <a class="f-email" href="mailto:${SITE.email}">${SITE.email}</a>
         <div class="socials">
           <a href="${SITE.instagram}" target="_blank" rel="noopener" aria-label="Instagram">${icons.instagram}</a>
           <a href="${SITE.facebook}" target="_blank" rel="noopener" aria-label="Facebook">${icons.facebook}</a>
           <a href="mailto:${SITE.email}" aria-label="Email Adrienne">${icons.mail}</a>
         </div>
+        <p class="f-where"><span class="f-clock"><i></i>Raleigh, NC <b data-clock>· Eastern time</b></span><span>Sessions held virtually, wherever you are.</span></p>
+        <a class="brand f-brand" href="${base}index.html" aria-label="Take Root Life Coaching — home">
+          <img src="${base}assets/img/logo-mark-sm.png" width="196" height="240" alt="">
+          <span class="brand-text"><span class="brand-name">take root</span><span class="brand-sub">Life Coaching</span></span>
+        </a>
       </div>
-      <div class="footer-col"><h4>Explore</h4><ul>
-        <li><a href="${base}index.html">Home</a></li><li><a href="${base}about.html">About Adrienne</a></li>
-        <li><a href="${base}journal.html">Journal</a></li><li><a href="${base}faq.html">FAQ</a></li></ul></div>
-      <div class="footer-col"><h4>Work together</h4><ul>
-        <li><a href="${base}coaching.html">Coaching &amp; pricing</a></li><li><a href="${base}work-with-me.html">Book a session</a></li>
-        <li><a href="${base}footing-check.html">The Footing Check</a></li><li><a href="${base}contact.html">Contact</a></li></ul></div>
-      <div class="footer-col"><h4>Say hello</h4><ul>
-        <li><a href="mailto:${SITE.email}">${SITE.email}</a></li><li><a href="${SITE.instagram}" target="_blank" rel="noopener">Instagram</a></li>
-        <li><a href="${SITE.facebook}" target="_blank" rel="noopener">Facebook</a></li><li><span class="muted" style="color:var(--on-dark-muted)">Raleigh, NC · Virtual</span></li></ul></div>
     </div>
   </div>
-  <div class="footer-mark" aria-hidden="true">
-    <div class="wordmark"><span class="wm-word">${wmChars("take")}</span><span class="wm-word wm-word--i">${wmChars("root")}</span></div>
-    ${footerRoots}
-  </div>
+  <div class="f-preview" aria-hidden="true"><img src="${imgUrl("adrienne-standing", 640, base)}" alt="" loading="lazy" decoding="async"></div>
   <div class="wrap footer-bar">
     <span class="f-rule f-rule--top" aria-hidden="true"></span>
     <span>© ${year} Take Root Life Coaching, LLC</span>
-    <span class="f-clock"><i></i>Raleigh, NC <b data-clock>· Eastern time</b></span>
     <nav aria-label="Legal"><a href="${SITE.privacy}">Privacy</a><a href="${SITE.terms}">Terms</a><span>Site by <a href="https://codebunny.net" target="_blank" rel="noopener">Code Bunny</a></span></nav>
     <a class="f-top" href="#top" data-top aria-label="Back to top">${arrow}</a>
   </div>
@@ -334,18 +302,22 @@ export function phero({ crumbs = [], title, lead = "", media = "", mediaAlt = ""
 export const testimonials = [
   {
     name: "Rene K.", tone: "", initial: "R",
+    big: "I have achieved new goals, altered my way of thinking and opened my world to <em>more possibilities.</em>",
     text: "Adrienne came into my life when I didn’t know I needed her most. Her advice and support has guided me through many challenges in my life. Adrienne’s empathetic and realistic perspective has helped me look at life in a different way that I could have never adopted on my own. <strong>I have achieved new goals, altered my way of thinking and opened my world to more possibilities.</strong> I highly recommend Adrienne’s life coaching to anyone looking to improve their lifestyle whether it be personal or professional.",
   },
   {
     name: "Elizabeth K.", tone: "avatar--clay", initial: "E",
+    big: "I have reached a point in my life and career where I am feeling <em>happy and successful.</em>",
     text: "From the day I met Adrienne, I found it very easy to speak with her about any concerns or troubles I was having. I had a major life and career shift over the span of a few months (including moving across the country) and Adrienne was more than helpful at pointing me in the right direction. She gave me confidence to try new things and go outside my comfort zone. <strong>I have reached a point in my life and career where I am feeling happy and successful, thanks to her help.</strong> I would utilize her life coaching skills again, no questions asked!",
   },
   {
     name: "Anne K.", tone: "avatar--moss", initial: "A",
+    big: "Talking to Adrienne helped me feel like it was possible to do things beyond what I thought I could do and <em>helped me become a better me.</em>",
     text: "Talking to Adrienne helped me feel like it was possible to do things beyond what I thought I could do and <strong>helped me become a better me.</strong> I am so grateful to talk to someone so personal and understanding as well as having full confidence in me. Thank you so much Adrienne!",
   },
   {
     name: "K. Patel", tone: "avatar--sand", initial: "K",
+    big: "I feel seen and validated whether I need <em>advice or a listening ear.</em>",
     text: "We are all on a different journey influenced by our personal perspective. Having Adrienne as a confidant is helpful in navigating the paths and obstacles I encounter. <strong>I feel seen and validated whether I need advice or a listening ear.</strong> If you need another being in your corner… Adrienne is here!",
   },
 ];
@@ -391,5 +363,9 @@ export const marquee = (words) => {
   const group = words
     .map((w, i) => `<span class="marquee-item${i % 2 ? " i" : ""}">${w}</span><span class="marquee-sep">${icons.sprig}</span>`)
     .join("");
-  return `<div class="marquee" aria-hidden="true"><div class="marquee-track"><div class="marquee-group">${group}</div><div class="marquee-group">${group}</div></div></div>`;
+  const track = (g) => `<div class="marquee-track"><div class="marquee-group">${g}</div><div class="marquee-group">${g}</div></div>`;
+  const group2 = [...words].reverse()
+    .map((w, i) => `<span class="marquee-item${i % 2 ? "" : " i"}">${w}</span><span class="marquee-sep">${icons.sprig}</span>`)
+    .join("");
+  return `<div class="ribbons" aria-hidden="true"><div class="ribbon ribbon--clay">${track(group)}</div><div class="ribbon ribbon--forest">${track(group2)}</div></div>`;
 };

@@ -61,7 +61,7 @@ const body = `
   </div>
 </section>
 
-<section class="section" aria-labelledby="hello">
+<section class="section" aria-labelledby="hello" style="padding-bottom:var(--space-sm)">
   <div class="wrap">
     ${sh("01", "Hello", "Adrienne Phelps · Life coach")}
     <h2 id="hello" class="sr-only">Hello, I’m Adrienne</h2>
@@ -79,7 +79,7 @@ const body = `
 
 ${marquee(["Clarity", "Confidence", "Courage", "Purpose", "Balance", "Growth"])}
 
-<section class="section" aria-labelledby="familiar">
+<section class="section" aria-labelledby="familiar" style="padding-top:var(--space-sm)">
   <div class="wrap">
     ${sh("02", "Sound familiar?", "Successful · restless · ready")}
     <div class="signs">
@@ -220,29 +220,30 @@ ${marquee(["Clarity", "Confidence", "Courage", "Purpose", "Balance", "Growth"])}
   </div>
 </section>
 
-<section class="section" aria-labelledby="words" style="padding-top:0">
+<section class="panel tstage" aria-labelledby="words">
   <div class="wrap">
     ${sh("07", "Kind words", "From real clients")}
-    <div class="head-row">
-      <h2 id="words" class="h2 balance" data-reveal>In their <em>own words.</em></h2>
-      <div class="t-controls" data-reveal style="--d:.1s">
-        <div class="t-progress"><i id="t-bar"></i></div>
-        <button class="t-btn prev" type="button" aria-label="Previous testimonial" data-t="-1">${icons.arrow}</button>
-        <button class="t-btn next" type="button" aria-label="Next testimonial" data-t="1">${icons.arrow}</button>
+    <div class="ts-grid">
+      <div class="ts-side">
+        <h2 id="words" class="h2 balance">In their <em>own words.</em></h2>
+        <div class="ts-tabs" role="tablist" aria-label="Client stories">
+          ${testimonials.map((t, i) => `<button class="ts-tab" type="button" role="tab" id="ts-tab-${i}" aria-controls="ts-panel-${i}" aria-selected="${i === 0}"${i ? ' tabindex="-1"' : ""}><span class="avatar ${t.tone}">${t.initial}</span><span class="ts-who"><b>${t.name}</b><small>Coaching client</small></span><span class="ts-bar"><i></i></span></button>`).join("")}
+        </div>
+        ${btn("Your story, next", "work-with-me.html", "btn--clay")}
       </div>
-    </div>
-    <div class="t-track" id="t-track" tabindex="0" aria-label="Client testimonials">
-      ${testimonials.map((t, i) => tCard(t, i)).join("")}
-      <a class="card card--forest t-card" href="work-with-me.html" data-reveal style="--d:.3s">
-        <span class="mono">Your turn</span>
-        <div><h3 class="h2" style="font-size:clamp(2.6rem,4vw,3.8rem)">Your story, <em>next.</em></h3><p style="margin-top:16px">It starts with a free 30-minute conversation. No pressure — just an honest talk about what you want.</p></div>
-        <div class="card-foot"><span class="mono">Book a First Step call</span>${arrowDot}</div>
-      </a>
+      <div class="ts-stage">
+        <span class="ts-mark" aria-hidden="true">“</span>
+        ${testimonials.map((t, i) => `<figure class="ts-panel${i === 0 ? " is-active" : ""}" id="ts-panel-${i}" role="tabpanel" aria-labelledby="ts-tab-${i}"${i ? " hidden" : ""}>
+          <blockquote class="ts-big">${t.big}</blockquote>
+          <figcaption class="ts-full">“${t.text.replace(/<\/?strong>/g, "")}”</figcaption>
+        </figure>`).join("")}
+        <div class="ts-count" aria-hidden="true"><b data-ts-count>01</b><span>/ 0${testimonials.length}</span></div>
+      </div>
     </div>
   </div>
 </section>
 
-<section class="section" aria-labelledby="check" style="padding-top:0">
+<section class="section" aria-labelledby="check">
   <div class="wrap">
     <div class="feature" data-reveal="scale">
       ${img("roots-grass", { alt: "", sizes: "100vw", style: "object-position:50% 70%" })}
