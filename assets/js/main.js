@@ -124,7 +124,7 @@
       const g = window.gsap;
       panels.forEach((p) => { g.killTweensOf(words(p)); g.killTweensOf($(".ts-full", p)); if (p !== newP) p.hidden = true; });
       newP.hidden = false;
-      g.fromTo(words(newP), { yPercent: 115, rotate: 3 }, { yPercent: 0, rotate: 0, duration: 0.95, ease: "expo.out", stagger: 0.014 });
+      g.fromTo(words(newP), { yPercent: 150, rotate: 3 }, { yPercent: 0, rotate: 0, duration: 0.95, ease: "expo.out", stagger: 0.014 });
       g.fromTo($(".ts-full", newP), { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.7, delay: 0.15, ease: "power3.out" });
       schedule();
     };
@@ -193,7 +193,7 @@
   d.addEventListener("keydown", (e) => { if (e.key === "Escape" && root.classList.contains("menu-open")) { setMenu(false); burger.focus(); } });
   $$("#menu a").forEach((a) => a.addEventListener("click", () => setMenu(false)));
 
-  let lastY = scrollY;
+  let lastY = scrollY, navDown = true, navAnchor = scrollY;
   const sticky = $("#sticky-book");
   const footer = $(".footer");
   let footerVisible = false;
@@ -208,7 +208,17 @@
   let ticking = false;
   const onScroll = () => {
     const y = scrollY;
-    if (!root.classList.contains("menu-open")) nav.classList.toggle("is-hidden", y > lastY && y > 240);
+    if (!root.classList.contains("menu-open")) {
+      // Direction is judged over a few pixels, and the bounce at the very top/bottom on iPhone is ignored
+      const maxY = d.documentElement.scrollHeight - innerHeight;
+      if (y < 120) nav.classList.remove("is-hidden");
+      else if (y < maxY - 4) {
+        const down = y > lastY;
+        if (down !== navDown) { navDown = down; navAnchor = lastY; }
+        if (navDown && y - navAnchor > 12) nav.classList.add("is-hidden");
+        else if (!navDown && navAnchor - y > 12) nav.classList.remove("is-hidden");
+      }
+    }
     lastY = y;
     if (sticky && !d.body.classList.contains("no-sticky")) {
       const on = y > innerHeight * 0.75 && !footerVisible;
@@ -465,7 +475,7 @@
       });
       const lineStart = {};
       const timing = words.map((w, k) => { const ln = delays[k]; lineStart[ln] = (lineStart[ln] ?? -1) + 1; return ln * 0.1 + lineStart[ln] * 0.03; });
-      gsap.set(words, { yPercent: 115, rotate: 3 });
+      gsap.set(words, { yPercent: 150, rotate: 3 });
       ScrollTrigger.create({
         trigger: el, start: "top 88%", once: true,
         onEnter: () => words.forEach((w, k) => gsap.to(w, { yPercent: 0, rotate: 0, duration: 1.1, ease: "expo.out", delay: timing[k] })),

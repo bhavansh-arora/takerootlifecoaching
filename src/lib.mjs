@@ -182,7 +182,8 @@ function footer(base, cta = {}) {
   <div class="wrap footer-bar">
     <span class="f-rule f-rule--top" aria-hidden="true"></span>
     <span>© ${year} Take Root Life Coaching, LLC</span>
-    <nav aria-label="Legal"><a href="${SITE.privacy}">Privacy</a><a href="${SITE.terms}">Terms</a><span>Site by <a class="f-credit" href="https://web.codebunny.net" target="_blank" rel="noopener">Code Bunny<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5"/></svg></a></span></nav>
+    <nav aria-label="Legal"><a href="${SITE.privacy}">Privacy</a><a href="${SITE.terms}">Terms</a></nav>
+    <a class="f-credit" href="https://web.codebunny.net" target="_blank" rel="noopener"><span>Site by</span><b>Code Bunny</b><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 11 11 5M6 5h5v5"/></svg></a>
     <a class="f-top" href="#top" data-top aria-label="Back to top">${arrow}</a>
   </div>
 </footer>
