@@ -1255,14 +1255,19 @@ html.lenis, html.lenis body { height: auto; }
   .ts-grid { gap: 28px; }
   .ts-side { display: contents; }
   .ts-side > h2 { order: 1; }
-  .ts-grid > .ts-stage { order: 2; padding-top: clamp(72px, 10vw, 96px); }
-  .ts-tabs { order: 3; margin: 0; display: grid; grid-template-columns: 1fr 1fr; column-gap: 20px; }
+  /* Names sit above the quote, so tapping one changes the text right below it (never off-screen above) */
+  .ts-tabs { order: 2; margin: 0; display: grid; grid-template-columns: 1fr 1fr; column-gap: 20px; }
+  .ts-grid > .ts-stage { order: 3; padding-top: clamp(56px, 9vw, 88px); }
   .ts-side > .btn { order: 4; justify-self: start; }
 }
 @media (max-width: 760px) {
   .ribbon .marquee-item { font-size: 1.5rem; }
   .ribbons { height: 176px; }
-  .ts-tabs { grid-template-columns: 1fr; }
+  .ts-tabs { column-gap: 14px; }
+  .ts-tab { grid-template-columns: 34px 1fr; gap: 10px; padding: 12px 0; }
+  .ts-tab .avatar { width: 34px; height: 34px; font-size: 13px; }
+  .ts-who b { font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ts-who small { display: none; }
   .f-hero { grid-template-columns: 1fr; }
   .f-disc { width: 136px; justify-self: start; }
   .f-row { grid-template-columns: 36px minmax(0, 1fr) auto; }
