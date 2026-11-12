@@ -171,7 +171,7 @@
   let loaded = false;
   const markLoaded = () => {
     if (loaded) return; loaded = true;
-    const go = () => setTimeout(() => requestAnimationFrame(() => root.classList.add("is-loaded")), arriving ? 120 : preloading ? 150 : 0);
+    const go = () => setTimeout(() => requestAnimationFrame(() => root.classList.add("is-loaded")), arriving ? 0 : preloading ? 150 : 0);
     if (loaderDone) go(); else afterLoader.push(go);
   };
   // Arriving through the curtain, fonts are already cached: start the entrance as the curtain lifts

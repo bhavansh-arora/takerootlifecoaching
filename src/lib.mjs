@@ -1,9 +1,13 @@
 // Shared layout, components and helpers for the Take Root site build.
 import { readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
 
 const here = new URL(".", import.meta.url);
 const images = JSON.parse(readFileSync(new URL("images.json", here), "utf8"));
 export const posts = JSON.parse(readFileSync(new URL("posts.json", here), "utf8"));
+// Content hash for an asset, so browsers fetch a fresh copy whenever the file changes
+const ver = (path) => createHash("sha256").update(readFileSync(new URL(`../${path}`, here))).digest("hex").slice(0, 10);
+const asset = (base, path) => `${base}${path}?v=${ver(path)}`;
 
 export const SITE = {
   name: "Take Root Life Coaching",
@@ -237,7 +241,7 @@ ${noindex ? '<meta name="robots" content="noindex, nofollow">' : `<link rel="can
 <link rel="manifest" href="${base}site.webmanifest">
 <link rel="preload" href="${base}assets/fonts/inter-tight.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="${base}assets/fonts/fraunces-italic.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="${base}assets/css/main.css">
+<link rel="stylesheet" href="${asset(base, "assets/css/main.css")}">
 <script>(function(d){d.classList.add('js');var rm=matchMedia('(prefers-reduced-motion: reduce)').matches;try{if(sessionStorage.getItem('tr-pt')&&!rm)d.classList.add('pt-in')}catch(e){}if(!rm&&!d.classList.contains('pt-in'))d.classList.add('is-preloading');setTimeout(function(){if(!d.classList.contains('is-ready')){d.classList.remove('js');d.classList.remove('pt-in');d.classList.remove('is-preloading')}},3000)})(document.documentElement);</script>
 <script type="application/ld+json">${JSON.stringify(ld.length === 1 ? ld[0] : ld)}</script>
 </head>
@@ -269,8 +273,8 @@ ${footer(base, cta)}
 <script src="${base}assets/vendor/lenis.min.js" defer></script>
 <script src="${base}assets/vendor/gsap.min.js" defer></script>
 <script src="${base}assets/vendor/ScrollTrigger.min.js" defer></script>
-<script src="${base}assets/js/main.js" defer></script>
-${scripts.map((s) => `<script src="${base}assets/js/${s}" defer></script>`).join("\n")}
+<script src="${asset(base, "assets/js/main.js")}" defer></script>
+${scripts.map((s) => `<script src="${asset(base, `assets/js/${s}`)}" defer></script>`).join("\n")}
 </body>
 </html>
 `;
